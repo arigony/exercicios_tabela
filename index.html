@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Química Geral | Exercícios Interativos - Lista 3</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0e2440;
+      --card:#ffffff;
+      --ink:#112033;
+      --muted:#667085;
+      --line:#d9e3f0;
+      --brand:#0877d7;
+      --brand2:#00b7ff;
+      --ok:#0b9f6a;
+      --ok-bg:#e8fff5;
+      --bad:#d83232;
+      --bad-bg:#fff0f0;
+      --warn:#f59e0b;
+      --radius:24px;
+      --shadow:0 24px 70px rgba(0,0,0,.22);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(0,183,255,.22), transparent 30%),
+        radial-gradient(circle at 90% 8%, rgba(91,141,239,.28), transparent 28%),
+        linear-gradient(135deg, var(--bg) 0%, var(--bg2) 58%, #102b4c 100%);
+      overflow-x:hidden;
+    }
+
+    .orb{
+      position:fixed;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      pointer-events:none;
+      opacity:.38;
+      animation:float 9s ease-in-out infinite;
+      z-index:0;
+    }
+    .orb::before,.orb::after{
+      content:"";
+      position:absolute;
+      width:9px;height:9px;
+      border-radius:50%;
+      background:rgba(84,205,255,.9);
+      box-shadow:0 0 20px rgba(84,205,255,.8);
+    }
+    .orb::before{top:16%;left:12%}
+    .orb::after{right:10%;bottom:18%;background:rgba(255,255,255,.85)}
+    .orb.one{width:210px;height:210px;left:-60px;top:115px;animation-delay:-1s}
+    .orb.two{width:280px;height:280px;right:-105px;top:210px;animation-delay:-4s}
+    .orb.three{width:170px;height:170px;left:8%;bottom:40px;animation-delay:-7s}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-18px) rotate(8deg)}}
+
+    .shell{position:relative;z-index:1;width:min(1160px,94vw);margin:0 auto;padding:26px 0 46px}
+
+    .hero{
+      color:white;
+      padding:30px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:32px;
+      background:linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -80px auto;
+      width:260px;height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(0,183,255,.35), transparent 70%);
+    }
+    .kicker{display:inline-flex;gap:8px;align-items:center;font-size:.82rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bdeeff}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--brand2);box-shadow:0 0 18px var(--brand2)}
+    h1{margin:14px 0 10px;font-size:clamp(2rem,5vw,4.2rem);line-height:1.02;letter-spacing:-.06em}
+    .hero p{max-width:820px;font-size:1.08rem;line-height:1.65;color:#e9f6ff;margin:0}
+    .hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:20px;align-items:end}
+    .hero-card{
+      position:relative;
+      z-index:2;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:24px;
+      padding:18px;
+    }
+    .hero-card strong{display:block;font-size:2rem;line-height:1;color:white}
+    .hero-card span{font-size:.9rem;color:#d7edf8}
+
+    .toolbar{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:12px;
+      align-items:center;
+    }
+    .student{
+      display:flex;gap:10px;align-items:center;background:white;border-radius:18px;padding:10px 12px;border:1px solid #dbe8f5;
+    }
+    .student label{font-weight:800;font-size:.88rem;color:#31445f;white-space:nowrap}
+    input[type="text"]{
+      border:0;outline:0;width:100%;font-size:1rem;color:#17233c;background:transparent;
+    }
+    .btn{
+      appearance:none;border:0;border-radius:16px;padding:13px 18px;font-weight:900;cursor:pointer;
+      background:linear-gradient(135deg, var(--brand), var(--brand2));color:white;box-shadow:0 12px 26px rgba(8,119,215,.25);
+      transition:.18s ease;letter-spacing:.01em;
+    }
+    .btn:hover{transform:translateY(-1px);filter:saturate(1.1)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#eef6ff;color:#0b4f8b;box-shadow:none;border:1px solid #cfe3f8}
+    .btn.ghost{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);box-shadow:none;color:white}
+    .btn.danger{background:#fff0f0;color:#b42318;box-shadow:none;border:1px solid #ffd0d0}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+    .layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;margin-top:22px;align-items:start}
+    .panel,.quiz-card{
+      background:rgba(255,255,255,.96);
+      border:1px solid rgba(255,255,255,.75);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{padding:18px;position:sticky;top:16px}
+    .panel h2,.quiz-card h2{margin:0 0 8px;font-size:1.1rem}
+    .tiny{font-size:.86rem;color:var(--muted);line-height:1.45}
+    .progress-wrap{height:12px;border-radius:999px;background:#e7eef8;overflow:hidden;margin:14px 0 12px}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:999px;transition:.35s ease}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .stat{padding:13px;border-radius:18px;background:#f5f9ff;border:1px solid #dfebf8}
+    .stat strong{display:block;font-size:1.3rem;color:#083f72}.stat span{font-size:.78rem;color:#667085;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+    .mini-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+    .qdot{height:38px;border-radius:13px;background:#f3f6fb;border:1px solid #dce7f3;color:#667085;font-weight:900;display:grid;place-items:center}
+    .qdot.active{background:#0b75d1;color:white;border-color:#0b75d1;box-shadow:0 8px 18px rgba(11,117,209,.22)}
+    .qdot.ok{background:var(--ok-bg);color:var(--ok);border-color:#baf1d8}.qdot.bad{background:var(--bad-bg);color:var(--bad);border-color:#ffc4c4}
+    .legend{margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;color:#607086;font-size:.82rem}.chip{display:inline-flex;align-items:center;gap:6px}.swatch{width:12px;height:12px;border-radius:4px;background:#e7eef8}.swatch.ok{background:var(--ok)}.swatch.bad{background:var(--bad)}
+    .leader{margin-top:16px;border-top:1px solid #e7eef8;padding-top:14px}
+    .leader ol{margin:8px 0 0;padding-left:20px}.leader li{font-size:.9rem;margin:5px 0;color:#344054}.leader b{color:#0a4c83}
+
+    .quiz-card{padding:24px;min-height:640px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .tag{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eaf7ff;color:#075985;font-weight:900;font-size:.83rem;border:1px solid #bee8ff}
+    .points{font-weight:900;color:#0b4f8b;background:#f4f9ff;border:1px solid #d9ebff;border-radius:999px;padding:8px 12px;font-size:.85rem}
+    .question-title{font-size:clamp(1.25rem,2.7vw,1.95rem);line-height:1.22;margin:6px 0 10px;letter-spacing:-.025em;color:#0f1f36}
+    .stem{font-size:1.04rem;line-height:1.62;color:#344054;margin:0 0 18px}.stem p{margin:.4em 0}.stem code{background:#eef6ff;border:1px solid #d7e9fb;border-radius:9px;padding:2px 6px;color:#0b4f8b}
+
+    .choices{display:grid;gap:12px;margin-top:18px}
+    .choice{
+      border:1px solid #dce7f3;background:#fff;border-radius:18px;padding:14px 15px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.15s ease;
+    }
+    .choice:hover{border-color:#8ccdf5;box-shadow:0 10px 28px rgba(8,119,215,.08);transform:translateY(-1px)}
+    .choice input{margin-top:3px;accent-color:#0b7ed8;transform:scale(1.12)}
+    .choice strong{color:#0c4d87}.choice .txt{line-height:1.45}.choice.selected{border-color:#0b7ed8;background:#f1f9ff}
+    .choice.correct{border-color:#57c79c;background:var(--ok-bg)}.choice.incorrect{border-color:#f19999;background:var(--bad-bg)}
+    .vf-list,.pair-list{display:grid;gap:14px;margin-top:16px}.vf-item,.pair-item{border:1px solid #dce7f3;background:#fff;border-radius:20px;padding:15px}.vf-head,.pair-head{font-weight:850;line-height:1.45;color:#26364d;margin-bottom:12px}
+    .toggle-row{display:flex;gap:10px;flex-wrap:wrap}.toggle{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;border:1px solid #d6e5f5;background:#f8fbff;cursor:pointer;font-weight:900;color:#31445f}.toggle input{accent-color:#0b7ed8}.toggle.picked{background:#ecf8ff;border-color:#7fd2ff;color:#075985}.vf-item.correct,.pair-item.correct{border-color:#57c79c;background:var(--ok-bg)}.vf-item.incorrect,.pair-item.incorrect{border-color:#f19999;background:var(--bad-bg)}
+
+    .formula-box{border-radius:18px;background:linear-gradient(135deg,#f5faff,#ffffff);border:1px solid #dce9f7;padding:14px;margin:14px 0;font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;color:#18324f;line-height:1.7;overflow-x:auto}
+    .mini-table{display:grid;grid-template-columns:repeat(10,28px);grid-auto-rows:28px;gap:0;justify-content:center;margin:14px auto 20px;max-width:max-content}.cell{width:28px;height:28px;border:1px solid #b8c2cf;display:grid;place-items:center;font-weight:900;background:white;color:#344054}.empty{border-color:transparent;background:transparent}.cell.mark{background:#eaf7ff;color:#064d83;border-color:#8fcff7}.cell.faded{background:#f8fafc;color:#9aa4b2}
+    .trend-card{border:1px dashed #b9d8ef;background:#f8fcff;border-radius:18px;padding:13px;margin-top:14px;color:#31445f;font-size:.95rem}.trend-card b{color:#075985}
+
+    .feedback{margin-top:18px;border-radius:22px;padding:17px;border:1px solid transparent;display:none;animation:pop .22s ease}.feedback.show{display:block}.feedback.ok{background:var(--ok-bg);border-color:#aee9cf}.feedback.bad{background:var(--bad-bg);border-color:#ffb8b8}.feedback h3{margin:0 0 8px;font-size:1.06rem}.feedback p{margin:.45em 0;line-height:1.55}.feedback .answer{font-weight:950}.feedback.ok h3{color:#08784f}.feedback.bad h3{color:#b42318}@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .actions{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap}.right-actions{display:flex;gap:10px;flex-wrap:wrap}.hint{font-size:.9rem;color:#6a778c}
+
+    .summary{display:none;padding:22px;border-radius:24px;background:white;border:1px solid #dce7f3}.summary.show{display:block}.summary h2{font-size:2rem;margin:0 0 10px}.badge-final{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 14px;background:#eaf7ff;color:#075985;font-weight:950;border:1px solid #c8ebff}.review-list{margin-top:16px;display:grid;gap:10px}.review-item{display:flex;justify-content:space-between;gap:12px;border:1px solid #e1eaf5;border-radius:16px;padding:12px;background:#fbfdff}.review-item .status-ok{color:var(--ok);font-weight:950}.review-item .status-bad{color:var(--bad);font-weight:950}
+
+    @media(max-width:880px){
+      .shell{width:min(100% - 20px,1160px);padding-top:12px}.hero{padding:22px;border-radius:25px}.hero-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.panel{position:relative;top:auto}.quiz-card{padding:18px;min-height:auto}.topline{align-items:flex-start;flex-direction:column}.student{width:100%}.btn{width:100%;justify-content:center}.right-actions{width:100%;display:grid;grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.mini-table{grid-template-columns:repeat(10,24px);grid-auto-rows:24px}.cell{width:24px;height:24px;font-size:.78rem}.choice{padding:13px}.hero-card strong{font-size:1.55rem}.review-item{flex-direction:column}
+    }
+    @media print{body{background:white}.orb,.toolbar,.panel,.actions{display:none}.shell{width:100%;padding:0}.hero{box-shadow:none;background:#0e2440;border-radius:0}.layout{display:block}.quiz-card{box-shadow:none;border:0}.feedback{display:block!important}.choice,.vf-item,.pair-item{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker"><span class="dot"></span> Química Geral • Lista 3</div>
+          <h1>Exercícios interativos de propriedades periódicas</h1>
+          <p>O aluno responde, confere imediatamente, recebe explicação do erro ou do acerto e avança para a próxima questão. Ideal para celular, Moodle, GitHub Pages e revisão antes da avaliação.</p>
+        </div>
+        <div class="hero-card" aria-label="Resumo do jogo">
+          <strong>10</strong><span>questões com feedback comentado</span><br><br>
+          <strong>100%</strong><span>HTML, CSS e JavaScript puro</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Barra de início">
+      <div class="student">
+        <label for="studentName">Aluno(a)</label>
+        <input id="studentName" type="text" maxlength="40" placeholder="Digite seu nome para registrar o resultado" />
+      </div>
+      <button class="btn secondary" id="resetBtn" type="button">Reiniciar</button>
+      <button class="btn ghost" id="printBtn" type="button">Imprimir / salvar PDF</button>
+    </section>
+
+    <section class="layout">
+      <aside class="panel" aria-label="Painel de desempenho">
+        <h2>Desempenho</h2>
+        <p class="tiny">As respostas ficam ocultas até o aluno clicar em <b>Conferir resposta</b>.</p>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="tiny" id="progressText">Questão 1 de 10</div>
+        <div class="stats">
+          <div class="stat"><strong id="scoreText">0</strong><span>pontos</span></div>
+          <div class="stat"><strong id="accText">0%</strong><span>acerto</span></div>
+        </div>
+        <div class="mini-list" id="questionDots"></div>
+        <div class="legend">
+          <span class="chip"><span class="swatch ok"></span>acerto</span>
+          <span class="chip"><span class="swatch bad"></span>erro</span>
+          <span class="chip"><span class="swatch"></span>pendente</span>
+        </div>
+        <div class="leader">
+          <h2>Ranking local</h2>
+          <p class="tiny">Salvo apenas neste navegador/dispositivo.</p>
+          <ol id="leaderboard"><li>Nenhum resultado ainda.</li></ol>
+        </div>
+      </aside>
+
+      <section class="quiz-card" id="quizCard" aria-live="polite"></section>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        id:1,type:'mcq',theme:'Tabela periódica',points:10,
+        title:'Maior eletronegatividade e menor energia de ionização',
+        stem:`<p>Considere os elementos químicos A, B, C, D, E e F posicionados no esquema simplificado da Tabela Periódica.</p>
+          <div class="mini-table" aria-label="Esquema simplificado da tabela periódica">
+            <div class="cell mark">A</div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell mark">C</div><div class="cell mark">E</div>
+            <div class="cell faded"></div><div class="cell faded"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div>
+            <div class="cell mark">B</div><div class="cell faded"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell mark">D</div>
+            <div class="cell faded"></div><div class="cell faded"></div><div class="cell empty"></div><div class="cell mark">F</div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div><div class="cell faded"></div>
+          </div>
+          <p>Os elementos que apresentam a <b>maior eletronegatividade</b> e a <b>energia de ionização mais baixa</b> são, respectivamente:</p>`,
+        options:[
+          {id:'a',text:'C, B.'},{id:'b',text:'B, C.'},{id:'c',text:'A, C.'},{id:'d',text:'D, B.'},{id:'e',text:'B, E.'}
+        ],
+        answer:'a',
+        correctText:'C, B.',
+        explanation:'A eletronegatividade aumenta, em geral, da esquerda para a direita e de baixo para cima. Assim, desconsiderando os gases nobres, o elemento mais eletronegativo do esquema é C. Já a energia de ionização mais baixa ocorre no elemento que segura seus elétrons mais fracamente: posição mais inferior e à esquerda, isto é, B.',
+        wrong:{
+          b:'A alternativa inverte as tendências: B está mais associado à baixa energia de ionização, não à maior eletronegatividade.',
+          c:'A não está tão à direita e no topo quanto C; além disso, C não é o elemento de menor energia de ionização.',
+          d:'D está abaixo de C; ao descer no grupo, a eletronegatividade tende a diminuir. A segunda parte, B, está correta, mas a primeira não.',
+          e:'B não é o mais eletronegativo; ele está à esquerda e abaixo. E fica no extremo direito, mas o gabarito considera C como o mais eletronegativo entre os elementos indicados, desconsiderando gases nobres.'
+        }
+      },
+      {
+        id:2,type:'vf',theme:'Período, família e valência',points:10,
+        title:'Nitrogênio e flúor no estado fundamental',
+        stem:`<p>Comparando os átomos dos elementos nitrogênio (N) e flúor (F), marque cada afirmação como verdadeira (V) ou falsa (F).</p>
+        <div class="formula-box">N: grupo 15, período 2, 5 elétrons de valência<br>F: grupo 17, período 2, 7 elétrons de valência</div>`,
+        items:[
+          {text:'Estão no mesmo período da tabela periódica.',answer:'V',explain:'N e F pertencem ao 2º período.'},
+          {text:'Têm o mesmo número de elétrons de valência.',answer:'F',explain:'N possui 5 elétrons de valência; F possui 7.'},
+          {text:'Possuem a mesma eletronegatividade.',answer:'F',explain:'O flúor é mais eletronegativo que o nitrogênio.'},
+          {text:'Estão na mesma família da tabela periódica.',answer:'F',explain:'N está no grupo 15; F está no grupo 17, dos halogênios.'}
+        ],
+        correctText:'V, F, F, F.',
+        explanation:'Estar no mesmo período significa ter elétrons ocupando o mesmo nível principal mais externo. N e F estão no período 2, mas pertencem a famílias diferentes e apresentam valências e eletronegatividades diferentes.'
+      },
+      {
+        id:3,type:'mcq',theme:'Raio atômico',points:10,
+        title:'Identificação por raio atômico',
+        stem:`<p>X, Y e Z representam três elementos com raios atômicos em nanômetros:</p>
+          <div class="formula-box">X: 0,0080 nm<br>Y: 0,123 nm<br>Z: 0,157 nm</div>
+          <p>Esses elementos podem ser, respectivamente:</p>`,
+        options:[
+          {id:'a',text:'Li, Be e Na.'},{id:'b',text:'Li, Na e Be.'},{id:'c',text:'Na, Be e Li.'},{id:'d',text:'Na, Li e Be.'},{id:'e',text:'Be, Li e Na.'}
+        ],
+        answer:'e',correctText:'Be, Li e Na.',
+        explanation:'O raio atômico aumenta ao descer um grupo e, em geral, diminui ao avançar da esquerda para a direita em um período. Entre Be, Li e Na, o menor é Be, depois Li, e o maior é Na. Portanto: X = Be, Y = Li e Z = Na.',
+        wrong:{
+          a:'Li não é menor que Be. No 2º período, Be fica à direita de Li e tende a ter raio menor.',
+          b:'Na é maior que Li e Be, portanto não corresponde ao valor intermediário Y.',
+          c:'Na não pode ser X, pois é o maior dos três raios.',
+          d:'Na não corresponde ao menor raio; ele está abaixo do Li no grupo 1 e apresenta raio maior.'
+        }
+      },
+      {
+        id:4,type:'vf',theme:'Tendências periódicas',points:10,
+        title:'Raio atômico: verdadeiro ou falso',
+        stem:`<p>Julgue os itens abaixo como verdadeiro (V) ou falso (F).</p>
+          <div class="trend-card"><b>Lembrete:</b> o raio atômico aumenta para baixo e para a esquerda na Tabela Periódica.</div>`,
+        items:[
+          {text:'O raio atômico aumenta nos períodos com o aumento do número atômico.',answer:'F',explain:'Dentro de um período, o número atômico aumenta, mas a carga nuclear efetiva também aumenta; por isso, o raio tende a diminuir.'},
+          {text:'O elemento de menor raio atômico é o hélio (He).',answer:'V',explain:'O He está no topo e possui pouquíssima camada eletrônica; costuma ser tratado como o menor raio atômico.'},
+          {text:'O elemento de maior raio atômico é o frâncio (Fr).',answer:'V',explain:'O Fr está no canto inferior esquerdo, região de maiores raios atômicos.'},
+          {text:'Quanto menor o número de camadas eletrônicas de um átomo, maior o seu raio atômico.',answer:'F',explain:'Menos camadas eletrônicas geralmente significa menor raio, não maior.'},
+          {text:'Quanto menor o raio atômico, maior a atração núcleo-elétron; portanto, maior será a tendência de o átomo ganhar elétrons.',answer:'V',explain:'Um raio menor favorece maior atração do núcleo pelos elétrons externos, o que se relaciona à tendência de atrair/ganhar elétrons.'}
+        ],
+        correctText:'F, V, V, F, V.',
+        explanation:'A tendência central é: raio aumenta ao descer um grupo e ao caminhar para a esquerda no período. O oposto, em geral, favorece maior atração núcleo-elétron.'
+      },
+      {
+        id:5,type:'pairs',theme:'Energia de ionização',points:10,
+        title:'Quem perde elétrons com mais facilidade?',
+        stem:`<p>Com base no conceito de energia de ionização, escolha qual elemento tem maior facilidade de perder elétrons em cada par.</p>
+        <div class="trend-card"><b>Regra rápida:</b> menor energia de ionização = maior facilidade de perder elétrons.</div>`,
+        items:[
+          {text:'Na ou K',options:['Na','K'],answer:'K',explain:'K está abaixo do Na no grupo 1, tem maior raio e menor energia de ionização; por isso perde elétrons com mais facilidade.'},
+          {text:'Na ou Mg',options:['Na','Mg'],answer:'Na',explain:'Na e Mg estão no mesmo período, mas Na está mais à esquerda e tem menor energia de ionização que Mg.'}
+        ],
+        correctText:'a) K; b) Na.',
+        explanation:'A facilidade de perder elétrons aumenta quando a energia de ionização diminui. Elementos mais à esquerda e mais abaixo tendem a perder elétrons com mais facilidade.'
+      },
+      {
+        id:6,type:'mcq',theme:'Ionizações sucessivas',points:10,
+        title:'Energias de ionização do magnésio',
+        stem:`<p>No processo de ionização do magnésio (Mg), foram obtidos os valores: 7732 kJ, 738 kJ e 1451 kJ.</p>
+          <div class="formula-box">Mg(g) → Mg⁺(g) → Mg²⁺(g) → Mg³⁺(g)</div>
+          <p>Qual alternativa associa corretamente os valores de E.I.1, E.I.2 e E.I.3?</p>`,
+        options:[
+          {id:'a',text:'E.I.1 = 7732; E.I.2 = 738; E.I.3 = 1451.'},
+          {id:'b',text:'E.I.1 = 738; E.I.2 = 7732; E.I.3 = 1451.'},
+          {id:'c',text:'E.I.1 = 738; E.I.2 = 738; E.I.3 = 1451.'},
+          {id:'d',text:'E.I.1 = 738; E.I.2 = 1451; E.I.3 = 7732.'},
+          {id:'e',text:'E.I.1 = 7732; E.I.2 = 7732; E.I.3 = 1451.'}
+        ],
+        answer:'d',correctText:'E.I.1 = 738; E.I.2 = 1451; E.I.3 = 7732.',
+        explanation:'As energias de ionização sucessivas aumentam porque, após cada remoção de elétron, o íon fica mais positivo e atrai mais fortemente os elétrons restantes. O grande salto em E.I.3 ocorre porque, após remover os dois elétrons 3s do Mg, a próxima remoção envolve um elétron de camada interna.',
+        wrong:{
+          a:'A primeira ionização não pode ser a maior; remover o primeiro elétron é o processo menos energético entre os três.',
+          b:'O valor 7732 kJ corresponde ao grande salto da terceira ionização, não da segunda.',
+          c:'As energias sucessivas não permanecem iguais; elas aumentam.',
+          e:'A primeira e a segunda ionizações não apresentam o mesmo valor alto; o maior salto é na terceira.'
+        }
+      },
+      {
+        id:7,type:'multi',theme:'Configuração eletrônica',points:10,
+        title:'Assinale as afirmações incorretas',
+        stem:`<p>Três elementos X, Y e Z têm as seguintes configurações eletrônicas no estado fundamental:</p>
+          <div class="formula-box">X: 1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s²<br>Y: 1s² 2s² 2p⁶ 3s² 3p⁵<br>Z: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹</div>
+          <p>Com relação aos três elementos, assinale a(s) afirmação(ões) <b>incorreta(s)</b>.</p>`,
+        options:[
+          {id:'a',text:'X é metal.'},{id:'b',text:'Y é um halogênio.'},{id:'c',text:'X encontra-se na família 1.'},{id:'d',text:'Todos os elementos são sólidos.'},{id:'e',text:'Y apresenta maior eletronegatividade.'}
+        ],
+        answer:['c','d'],correctText:'X encontra-se na família 1; Todos os elementos são sólidos.',
+        explanation:'X possui Z = 30, portanto é Zn, metal de transição da família 12. Y possui Z = 17, portanto é Cl, halogênio gasoso. Z possui Z = 19, portanto é K, metal alcalino. Assim, é incorreto dizer que X está na família 1 e também é incorreto afirmar que todos são sólidos, pois o cloro é gasoso.',
+        wrong:{
+          a:'Esta afirmação está correta: X é Zn, um metal. Como a questão pede as incorretas, ela não deveria ser marcada.',
+          b:'Esta afirmação está correta: Y é Cl, um halogênio. Como a questão pede as incorretas, ela não deveria ser marcada.',
+          e:'Esta afirmação está correta no conjunto: Cl é mais eletronegativo que Zn e K. Como a questão pede as incorretas, ela não deveria ser marcada.'
+        }
+      },
+      {
+        id:8,type:'mcq',theme:'Configuração e família',points:10,
+        title:'Elementos A, B, C, D e E',
+        stem:`<p>Os elementos a seguir apresentam as configurações eletrônicas:</p>
+          <div class="formula-box">A: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹<br>B: 1s² 2s²<br>C: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁵<br>D: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶<br>E: 1s² 2s² 2p¹</div>
+          <p>Assinale a alternativa correta.</p>`,
+        options:[
+          {id:'a',text:'O elemento A é um gás nobre.'},
+          {id:'b',text:'O elemento B é um metal alcalino terroso.'},
+          {id:'c',text:'O elemento C apresenta o maior raio.'},
+          {id:'d',text:'O elemento D apresentará a configuração 1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d³ ao tornar-se um cátion trivalente.'},
+          {id:'e',text:'O elemento E é o mais eletronegativo.'}
+        ],
+        answer:'b',correctText:'O elemento B é um metal alcalino terroso.',
+        explanation:'B tem configuração 1s² 2s², logo Z = 4, que corresponde ao berílio (Be), um metal alcalino terroso do grupo 2. A é K, C é Br, D é Fe e E é B.',
+        wrong:{
+          a:'A termina em 4s¹, portanto é K, um metal alcalino, não um gás nobre.',
+          c:'C é Br. O maior raio entre os listados é esperado para A, o K, por estar mais à esquerda no período 4.',
+          d:'No Fe³⁺, os elétrons 4s são removidos antes dos 3d; a configuração correta é mais bem representada como [Ar] 3d⁵.',
+          e:'E é B. Ele não é o mais eletronegativo do conjunto; o Br é mais eletronegativo.'
+        }
+      },
+      {
+        id:9,type:'mcq',theme:'Propriedades comparadas',points:10,
+        title:'Identificando o elemento pelas características',
+        stem:`<p>Considere as seguintes características de certo elemento químico:</p>
+          <div class="formula-box">I. É menos eletronegativo que o oxigênio (O).<br>II. Possui raio atômico menor que o berílio (Be).<br>III. Possui eletroafinidade maior que o boro (B).</div>
+          <p>Esse elemento químico pode ser:</p>`,
+        options:[
+          {id:'a',text:'Flúor (F).'},{id:'b',text:'Enxofre (S).'},{id:'c',text:'Carbono (C).'},{id:'d',text:'Alumínio (Al).'},{id:'e',text:'Magnésio (Mg).'}
+        ],
+        answer:'c',correctText:'Carbono (C).',
+        explanation:'O carbono é menos eletronegativo que o oxigênio, possui raio menor que o berílio e apresenta eletroafinidade maior que a do boro. Assim, satisfaz simultaneamente as três condições.',
+        wrong:{
+          a:'O flúor é mais eletronegativo que o oxigênio, então falha na condição I.',
+          b:'O enxofre tem raio maior que o berílio, então falha na condição II.',
+          d:'O alumínio tem raio maior que o berílio e não atende ao conjunto das condições.',
+          e:'O magnésio tem raio maior que o berílio e não atende ao conjunto das condições.'
+        }
+      },
+      {
+        id:10,type:'pairs',theme:'Raio iônico',points:10,
+        title:'Maior raio em pares de espécies',
+        stem:`<p>Qual espécie tem maior raio em cada par? Use a quantidade de elétrons, as configurações eletrônicas e a carga nuclear para pensar.</p>`,
+        items:[
+          {text:'¹¹Na ou ¹¹Na⁺',options:['¹¹Na','¹¹Na⁺'],answer:'¹¹Na',explain:'Na neutro possui configuração 1s² 2s² 2p⁶ 3s¹. Ao formar Na⁺, perde o elétron 3s e fica com uma camada a menos ocupada; o cátion é menor.'},
+          {text:'⁸O²⁻ ou ⁹F⁻',options:['⁸O²⁻','⁹F⁻'],answer:'⁸O²⁻',explain:'O²⁻ e F⁻ são isoeletrônicos, ambos com 10 elétrons. O²⁻ tem menor carga nuclear (8 prótons) que F⁻ (9 prótons), atrai menos os elétrons e apresenta maior raio.'}
+        ],
+        correctText:'a) ¹¹Na; b) ⁸O²⁻.',
+        explanation:'Cátions são menores que seus átomos neutros correspondentes. Em espécies isoeletrônicas, a espécie com menor número de prótons prende menos os elétrons e fica maior.'
+      }
+    ];
+
+    let current = 0;
+    let answers = Array(questions.length).fill(null);
+    let checked = Array(questions.length).fill(false);
+    let correctness = Array(questions.length).fill(null);
+    let resultSaved = false;
+
+    const quizCard = document.getElementById('quizCard');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const scoreText = document.getElementById('scoreText');
+    const accText = document.getElementById('accText');
+    const dots = document.getElementById('questionDots');
+    const nameInput = document.getElementById('studentName');
+
+    function normalizeArray(a){return [...a].sort().join('|')}
+    function escapeHtml(str){return String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+    function renderDots(){
+      dots.innerHTML = questions.map((q,i)=>{
+        const cls = ['qdot'];
+        if(i===current) cls.push('active');
+        if(correctness[i]===true) cls.push('ok');
+        if(correctness[i]===false) cls.push('bad');
+        return `<button class="${cls.join(' ')}" type="button" onclick="goTo(${i})" aria-label="Ir para questão ${i+1}">${i+1}</button>`;
+      }).join('');
+    }
+
+    function score(){return correctness.filter(Boolean).length * 10}
+    function answeredCount(){return checked.filter(Boolean).length}
+
+    function updateProgress(){
+      const done = answeredCount();
+      progressBar.style.width = `${(done/questions.length)*100}%`;
+      progressText.textContent = `Questão ${current+1} de ${questions.length} • ${done} respondida(s)`;
+      scoreText.textContent = score();
+      const acc = done ? Math.round((correctness.filter(Boolean).length/done)*100) : 0;
+      accText.textContent = `${acc}%`;
+      renderDots();
+    }
+
+    function renderQuestion(){
+      const q = questions[current];
+      const isChecked = checked[current];
+      quizCard.innerHTML = `
+        <div class="topline">
+          <span class="tag">Questão ${current+1} • ${q.theme}</span>
+          <span class="points">${q.points} pontos</span>
+        </div>
+        <h2 class="question-title">${q.title}</h2>
+        <div class="stem">${q.stem}</div>
+        ${renderInteraction(q)}
+        <div id="feedback" class="feedback"></div>
+        <div class="actions">
+          <button class="btn secondary" type="button" onclick="prevQuestion()" ${current===0?'disabled':''}>← Anterior</button>
+          <span class="hint">Responda e clique em conferir para liberar a explicação.</span>
+          <div class="right-actions">
+            <button class="btn" id="checkBtn" type="button" onclick="checkAnswer()">Conferir resposta</button>
+            <button class="btn secondary" type="button" onclick="nextQuestion()">${current===questions.length-1?'Finalizar':'Próxima →'}</button>
+          </div>
+        </div>
+      `;
+      if(answers[current]) restoreAnswer(q, answers[current]);
+      if(isChecked) showFeedback(q, correctness[current]);
+      updateSelectionStyles();
+      updateProgress();
+    }
+
+    function renderInteraction(q){
+      if(q.type === 'mcq'){
+        return `<div class="choices">${q.options.map(o=>`
+          <label class="choice" data-option="${o.id}">
+            <input type="radio" name="answer" value="${o.id}" ${checked[current]?'disabled':''}>
+            <span class="txt"><strong>(${o.id})</strong> ${o.text}</span>
+          </label>`).join('')}</div>`;
+      }
+      if(q.type === 'multi'){
+        return `<div class="choices">${q.options.map(o=>`
+          <label class="choice" data-option="${o.id}">
+            <input type="checkbox" name="answer" value="${o.id}" ${checked[current]?'disabled':''}>
+            <span class="txt"><strong>(${o.id})</strong> ${o.text}</span>
+          </label>`).join('')}</div>`;
+      }
+      if(q.type === 'vf'){
+        return `<div class="vf-list">${q.items.map((it,idx)=>`
+          <div class="vf-item" data-vf="${idx}">
+            <div class="vf-head">${idx+1}. ${it.text}</div>
+            <div class="toggle-row">
+              <label class="toggle"><input type="radio" name="vf${idx}" value="V" ${checked[current]?'disabled':''}> Verdadeiro</label>
+              <label class="toggle"><input type="radio" name="vf${idx}" value="F" ${checked[current]?'disabled':''}> Falso</label>
+            </div>
+          </div>`).join('')}</div>`;
+      }
+      if(q.type === 'pairs'){
+        return `<div class="pair-list">${q.items.map((it,idx)=>`
+          <div class="pair-item" data-pair="${idx}">
+            <div class="pair-head">${String.fromCharCode(97+idx)}) ${it.text}</div>
+            <div class="toggle-row">${it.options.map(opt=>`
+              <label class="toggle"><input type="radio" name="pair${idx}" value="${escapeHtml(opt)}" ${checked[current]?'disabled':''}> ${opt}</label>`).join('')}</div>
+          </div>`).join('')}</div>`;
+      }
+      return '';
+    }
+
+    function getAnswer(q){
+      if(q.type === 'mcq') return document.querySelector('input[name="answer"]:checked')?.value || null;
+      if(q.type === 'multi') return [...document.querySelectorAll('input[name="answer"]:checked')].map(el=>el.value);
+      if(q.type === 'vf'){
+        const arr = [];
+        for(let i=0;i<q.items.length;i++){
+          const val = document.querySelector(`input[name="vf${i}"]:checked`)?.value;
+          if(!val) return null;
+          arr.push(val);
+        }
+        return arr;
+      }
+      if(q.type === 'pairs'){
+        const arr = [];
+        for(let i=0;i<q.items.length;i++){
+          const val = document.querySelector(`input[name="pair${i}"]:checked`)?.value;
+          if(!val) return null;
+          arr.push(val);
+        }
+        return arr;
+      }
+    }
+
+    function isCorrect(q, ans){
+      if(!ans) return false;
+      if(q.type === 'mcq') return ans === q.answer;
+      if(q.type === 'multi') return normalizeArray(ans) === normalizeArray(q.answer);
+      if(q.type === 'vf') return ans.every((v,i)=> v === q.items[i].answer);
+      if(q.type === 'pairs') return ans.every((v,i)=> v === q.items[i].answer);
+      return false;
+    }
+
+    function checkAnswer(){
+      const q = questions[current];
+      const ans = getAnswer(q);
+      const hasAnswer = Array.isArray(ans) ? ans.length>0 : Boolean(ans);
+      if(!hasAnswer){
+        flashTemporary('Escolha uma resposta antes de conferir.', 'bad');
+        return;
+      }
+      if(q.type === 'multi' && ans.length === 0){ flashTemporary('Marque pelo menos uma alternativa.', 'bad'); return; }
+      answers[current] = ans;
+      const ok = isCorrect(q, ans);
+      checked[current] = true;
+      correctness[current] = ok;
+      lockInputs();
+      updateSelectionStyles();
+      showFeedback(q, ok);
+      updateProgress();
+      if(answeredCount() === questions.length) saveResult();
+    }
+
+    function lockInputs(){ document.querySelectorAll('input').forEach(el => { if(el.name !== '' && el.id !== 'studentName') el.disabled = true; }); }
+
+    function showFeedback(q, ok){
+      const fb = document.getElementById('feedback');
+      const ans = answers[current];
+      let detail = '';
+      if(!ok){
+        if(q.type === 'mcq' && q.wrong && q.wrong[ans]) detail = `<p><b>Por que errou:</b> ${q.wrong[ans]}</p>`;
+        if(q.type === 'multi'){
+          const extras = (ans||[]).filter(x=>!q.answer.includes(x)).map(x=>q.wrong?.[x]).filter(Boolean);
+          if(extras.length) detail = `<p><b>Por que errou:</b> ${extras.join(' ')}</p>`;
+        }
+        if(q.type === 'vf'){
+          const misses = ans.map((v,i)=> v !== q.items[i].answer ? `<li><b>Item ${i+1}:</b> ${q.items[i].explain}</li>` : '').filter(Boolean).join('');
+          if(misses) detail = `<p><b>Itens a revisar:</b></p><ul>${misses}</ul>`;
+        }
+        if(q.type === 'pairs'){
+          const misses = ans.map((v,i)=> v !== q.items[i].answer ? `<li><b>${String.fromCharCode(97+i)})</b> ${q.items[i].explain}</li>` : '').filter(Boolean).join('');
+          if(misses) detail = `<p><b>Itens a revisar:</b></p><ul>${misses}</ul>`;
+        }
+      }
+      fb.className = `feedback show ${ok?'ok':'bad'}`;
+      fb.innerHTML = ok ?
+        `<h3>✅ Muito bem! Resposta correta.</h3><p class="answer">Resposta: ${q.correctText}</p><p>${q.explanation}</p>` :
+        `<h3>⚠️ Ainda não. Vamos corrigir o raciocínio.</h3>${detail}<p class="answer">Resposta correta: ${q.correctText}</p><p>${q.explanation}</p>`;
+      document.getElementById('checkBtn').disabled = true;
+    }
+
+    function flashTemporary(msg, kind){
+      const fb = document.getElementById('feedback');
+      fb.className = `feedback show ${kind}`;
+      fb.innerHTML = `<h3>${msg}</h3>`;
+      setTimeout(()=>{ if(!checked[current]) fb.className='feedback'; }, 1800);
+    }
+
+    function restoreAnswer(q, ans){
+      if(q.type === 'mcq'){
+        const el = document.querySelector(`input[name="answer"][value="${ans}"]`); if(el) el.checked = true;
+      }
+      if(q.type === 'multi'){
+        ans.forEach(v=>{ const el = document.querySelector(`input[name="answer"][value="${v}"]`); if(el) el.checked=true; });
+      }
+      if(q.type === 'vf') ans.forEach((v,i)=>{ const el = document.querySelector(`input[name="vf${i}"][value="${v}"]`); if(el) el.checked=true; });
+      if(q.type === 'pairs') ans.forEach((v,i)=>{ const el = [...document.querySelectorAll(`input[name="pair${i}"]`)].find(e=>e.value===v); if(el) el.checked=true; });
+    }
+
+    function updateSelectionStyles(){
+      document.querySelectorAll('.choice').forEach(label=>{
+        const input = label.querySelector('input');
+        label.classList.toggle('selected', input.checked);
+      });
+      document.querySelectorAll('.toggle').forEach(label=>{
+        const input = label.querySelector('input');
+        label.classList.toggle('picked', input.checked);
+      });
+      if(!checked[current]) return;
+      const q = questions[current];
+      if(q.type === 'mcq'){
+        document.querySelectorAll('.choice').forEach(label=>{
+          const id = label.dataset.option;
+          if(id === q.answer) label.classList.add('correct');
+          if(label.querySelector('input').checked && id !== q.answer) label.classList.add('incorrect');
+        });
+      }
+      if(q.type === 'multi'){
+        document.querySelectorAll('.choice').forEach(label=>{
+          const id = label.dataset.option;
+          if(q.answer.includes(id)) label.classList.add('correct');
+          if(label.querySelector('input').checked && !q.answer.includes(id)) label.classList.add('incorrect');
+        });
+      }
+      if(q.type === 'vf'){
+        document.querySelectorAll('.vf-item').forEach((box,i)=>{
+          const val = document.querySelector(`input[name="vf${i}"]:checked`)?.value;
+          box.classList.add(val === q.items[i].answer ? 'correct' : 'incorrect');
+        });
+      }
+      if(q.type === 'pairs'){
+        document.querySelectorAll('.pair-item').forEach((box,i)=>{
+          const val = document.querySelector(`input[name="pair${i}"]:checked`)?.value;
+          box.classList.add(val === q.items[i].answer ? 'correct' : 'incorrect');
+        });
+      }
+    }
+
+    document.addEventListener('change', e=>{
+      if(e.target.matches('input[type="radio"], input[type="checkbox"]')) updateSelectionStyles();
+    });
+
+    function nextQuestion(){
+      if(current < questions.length-1){ current++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else renderSummary();
+    }
+    function prevQuestion(){ if(current>0){ current--; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); } }
+    function goTo(i){ current = i; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+    function renderSummary(){
+      const total = score();
+      const pct = Math.round((total/(questions.length*10))*100);
+      const name = nameInput.value.trim() || 'Aluno(a)';
+      saveResult();
+      quizCard.innerHTML = `<div class="summary show">
+        <span class="badge-final">🏁 Resultado final</span>
+        <h2>${name}, sua pontuação foi ${total}/${questions.length*10}</h2>
+        <p class="stem">Aproveitamento: <b>${pct}%</b>. Revise principalmente as questões marcadas em vermelho no painel lateral.</p>
+        <div class="review-list">
+          ${questions.map((q,i)=>`<div class="review-item"><span><b>Questão ${i+1}</b> • ${q.theme}</span><span class="${correctness[i]?'status-ok':'status-bad'}">${correctness[i]?'Correta':'Revisar'}</span></div>`).join('')}
+        </div>
+        <div class="actions"><button class="btn secondary" onclick="goTo(0)">Rever questões</button><button class="btn" onclick="window.print()">Imprimir resultado</button></div>
+      </div>`;
+      updateProgress();
+      renderLeaderboard();
+    }
+
+    function saveResult(){
+      if(answeredCount() < questions.length || resultSaved) return;
+      resultSaved = true;
+      const key = 'qg_lista3_ranking_v1';
+      const name = nameInput.value.trim() || 'Aluno(a)';
+      const entry = {name,score:score(),date:new Date().toLocaleString('pt-BR')};
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.push(entry);
+      list.sort((a,b)=> b.score - a.score || new Date(b.date)-new Date(a.date));
+      localStorage.setItem(key, JSON.stringify(list.slice(0,8)));
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard(){
+      const list = JSON.parse(localStorage.getItem('qg_lista3_ranking_v1') || '[]');
+      const el = document.getElementById('leaderboard');
+      if(!list.length){el.innerHTML='<li>Nenhum resultado ainda.</li>';return;}
+      el.innerHTML = list.map(item=>`<li><b>${escapeHtml(item.name)}</b> — ${item.score} pts <br><span class="tiny">${item.date}</span></li>`).join('');
+    }
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      current = 0; answers = Array(questions.length).fill(null); checked = Array(questions.length).fill(false); correctness = Array(questions.length).fill(null); resultSaved = false; renderQuestion();
+    });
+    document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+    renderLeaderboard();
+    renderQuestion();
+  </script>
+</body>
+</html>
